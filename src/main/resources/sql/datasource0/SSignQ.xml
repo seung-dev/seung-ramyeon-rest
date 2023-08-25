@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sql.datasource0.SSignQ">
+
+<parameterMap id="parameterMap" type="seung.util.kimchi.types.SLinkedHashMap"></parameterMap>
+<resultMap    id="resultMap"    type="seung.util.kimchi.types.SLinkedHashMap"></resultMap>
+
+
+<select id="has_username" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	'1' AS has_username
+FROM
+	realinfo.t_member_d0112 AS t_d0112
+]]>
+<where>
+<![CDATA[
+	AND t_d0102.username = #{username}
+]]>
+</where>
+</select>
+
+<select id="member_no" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	CASE
+		WHEN '1' = (SELECT '1' FROM realinfo.t_member_d0110 WHERE member_no = #{member_no}) THEN ''
+		ELSE #{member_no}
+		END AS member_no
+]]>
+</select>
+
+<select id="group_no" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	COALESCE(
+		(
+			SELECT
+				group_no
+			FROM
+				realinfo.t_member_d0100
+			WHERE
+				group_code = #{group_code}
+		)
+		, ''
+	) AS group_no
+]]>
+</select>
+
+<insert id="add_username" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO realinfo.t_member_d0112
+(
+	username
+	, member_no
+	, secret
+)
+VALUES
+(
+	#{username}
+	, #{member_no}
+	, COALESCE(#{secret}, '')
+)
+]]>
+</insert>
+
+<insert id="add_role" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO realinfo.t_member_d0111
+(
+	member_no
+	, member_role
+	, member_updt
+)
+VALUES
+(
+	#{member_no}
+	, #{member_role}
+	, #{member_no}
+)
+]]>
+</insert>
+
+<insert id="add_member" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO realinfo.t_member_d0110
+(
+	member_no
+	, group_no
+	, email
+	, phone_number
+	, name_full
+	, name_nick
+	, avatar
+)
+VALUES
+(
+	#{member_no}
+	, #{group_no}
+	, COALESCE(#{username}, '')
+	, COALESCE(#{phone_number}, '')
+	, COALESCE(#{name_full}, '')
+	, COALESCE(#{name_nick}, '')
+	, COALESCE(#{avatar}, '')
+)
+]]>
+</insert>
+
+<select id="user_by_username" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	COALESCE(t_d0102.s_password, '') AS password
+	, v_state.principal
+	, v_state.roles
+	, v_state.enabled
+	, v_state.account_non_expired
+	, v_state.credentials_non_expired
+	, v_state.account_non_locked
+FROM
+	realinfo.v_member_state AS v_state
+	JOIN realinfo.t_member_d0102 AS t_d0102
+		ON t_d0102.member_no = v_state.member_no
+]]>
+<where>
+<![CDATA[
+	AND v_state.member_no = realinfo.f_member_no(req_search_type := 'username', req_search_text := #{s_username})
+]]>
+</where>
+</select>
+
+<update id="siginin_date" parameterMap="parameterMap">
+<![CDATA[
+UPDATE realinfo.t_member_d0100
+SET
+	date_signin = NOW()
+]]>
+<where>
+<![CDATA[
+	AND member_no = realinfo.f_member_no(req_search_type := 'principal', req_search_text := #{principal})
+]]>
+</where>
+</update>
+
+<update id="username_success" parameterMap="parameterMap">
+<![CDATA[
+UPDATE realinfo.t_member_d0102
+SET
+	date_updt = NOW()
+	, username_fail = 0
+]]>
+<where>
+<![CDATA[
+	AND member_no = realinfo.f_member_no(req_search_type := 'username', req_search_text := #{s_username})
+]]>
+</where>
+</update>
+
+<update id="add_username_fail" parameterMap="parameterMap">
+<![CDATA[
+UPDATE realinfo.t_member_d0102
+SET
+	date_updt = NOW()
+	, username_fail = username_fail + 1
+]]>
+<where>
+<![CDATA[
+	AND member_no = realinfo.f_member_no(req_search_type := 'username', req_search_text := #{s_username})
+]]>
+</where>
+</update>
+
+<select id="username_fail" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	COALESCE(
+		(
+			SELECT
+				t_d0102.username_fail
+			FROM
+				realinfo.t_member_d0102 AS t_d0102
+]]>
+			<where>
+			<![CDATA[
+				AND t_d0102.member_no = realinfo.f_member_no(req_search_type := 'username', req_search_text := #{s_username})
+			]]>
+			</where>
+<![CDATA[
+		)
+		, -1
+	) AS username_fail
+]]>
+</select>
+
+<select id="user_by_oauth2" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	v_state.member_no
+	, v_state.principal
+	, v_state.roles
+	, v_state.enabled
+	, v_state.account_non_expired
+	, v_state.credentials_non_expired
+	, v_state.account_non_locked
+	, t_d0103.is_lock
+FROM
+	realinfo.v_member_state AS v_state
+	JOIN realinfo.t_member_d0103 AS t_d0103
+		ON t_d0103.member_no = v_state.member_no
+		AND t_d0103.provider = #{provider}
+]]>
+<where>
+<![CDATA[
+	AND v_state.member_no = realinfo.f_member_no(req_search_type := #{provider}, req_search_text := #{sub})
+]]>
+</where>
+</select>
+
+<update id="update_oauth2" parameterMap="parameterMap">
+<![CDATA[
+UPDATE realinfo.t_member_d0103
+SET
+	date_updt = NOW()
+	, is_lock = '0'
+	, email = #{email}
+	, email_verified = COALESCE(#{email_verified}, '0')
+	, name_full = COALESCE(#{name_full}, '')
+	, name_nick = COALESCE(#{name_nick}, '')
+	, avatar = COALESCE(#{avatar}, '')
+	, locale = COALESCE(#{locale}, '')
+]]>
+<where>
+<![CDATA[
+	AND member_no = realinfo.f_member_no(req_search_type := #{provider}, req_search_text := #{sub})
+	AND provider = #{provider}
+]]>
+</where>
+</update>
+
+<select id="member_no_by_principal" parameterMap="parameterMap" resultMap="resultMap">
+<![CDATA[
+SELECT
+	realinfo.f_member_no(req_search_type := 'principal', req_search_text := #{principal}) AS member_no_by_principal
+]]>
+</select>
+
+<insert id="add_oauth2" parameterMap="parameterMap">
+<![CDATA[
+INSERT INTO realinfo.t_member_d0103
+(
+	member_no
+	, provider
+	, sub
+	, email
+	, email_verified
+	, name_full
+	, name_nick
+	, avatar
+	, locale
+)
+VALUES
+(
+	#{member_no}
+	, #{provider}
+	, #{sub}
+	, #{email}
+	, COALESCE(#{email_verified}, '0')
+	, COALESCE(#{name_full}, '')
+	, COALESCE(#{name_nick}, '')
+	, COALESCE(#{avatar}, '')
+	, COALESCE(#{locale}, '')
+)
+]]>
+</insert>
+
+</mapper>
