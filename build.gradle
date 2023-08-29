@@ -70,11 +70,11 @@ dependencies {
 	
 	// seung
 	/*
-	implementation(project(path: ":seung-util-kimchi", configuration: "default")) {
+	implementation("com.github.seung-dev:seung-util-kimchi:23.07.28.04") {
 		exclude module: "slf4j-simple"
 	}
 	*/
-	implementation("com.github.seung-dev:seung-util-kimchi:23.07.28.04") {
+	implementation(project(path: ":seung-util-kimchi", configuration: "default")) {
 		exclude module: "slf4j-simple"
 	}
 	

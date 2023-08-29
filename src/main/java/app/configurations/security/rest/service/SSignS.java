@@ -4,12 +4,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.ResponseEntity;
 
-import app.configurations.security.rest.types.SSigninUsername;
-import app.configurations.security.rest.types.SSignupUsername;
-import app.configurations.security.rest.types.SVerifyUsername;
-import app.configurations.security.types.SOAuth2AuthenticationException;
-import app.configurations.web.types.SRequestHeader;
-import app.configurations.web.types.SResponseBody;
+import app.boot.configuration.rest.type.SSigninUsername;
+import app.boot.configuration.rest.type.SSignupUsername;
+import app.boot.configuration.rest.type.SVerifyUsername;
+import app.boot.configuration.security.type.SOAuth2AuthenticationException;
+import app.boot.configuration.web.type.SRequestHeader;
+import app.boot.configuration.web.type.SResponseBody;
 
 public interface SSignS {
 

@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.boot.configuration.rest.type.SSigninUsername;
+import app.boot.configuration.rest.type.SSignupUsername;
+import app.boot.configuration.rest.type.SVerifyUsername;
+import app.boot.configuration.web.type.SRequestHeader;
 import app.configurations.security.rest.service.SSignS;
 import app.configurations.security.rest.service.impl.SOAuth2UserService;
-import app.configurations.security.rest.types.SSigninUsername;
-import app.configurations.security.rest.types.SSignupUsername;
-import app.configurations.security.rest.types.SVerifyUsername;
-import app.configurations.web.types.SRequestHeader;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController

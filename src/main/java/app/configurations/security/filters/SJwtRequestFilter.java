@@ -15,9 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import app.configurations.security.jwt.SJwt;
+import app.boot.configuration.security.jwt.SJwt;
+import app.boot.configuration.security.type.SUser;
 import app.configurations.security.rest.service.impl.SUserDetailsService;
-import app.configurations.security.types.SUser;
 import lombok.extern.slf4j.Slf4j;
 import seung.util.kimchi.types.SError;
 

@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import app.configurations.datasources.SMapper0;
-import app.configurations.security.types.SUser;
+import app.boot.configuration.datasource.SMapper0;
+import app.boot.configuration.security.type.SUser;
 import lombok.extern.slf4j.Slf4j;
 import seung.util.kimchi.types.SLinkedHashMap;
 

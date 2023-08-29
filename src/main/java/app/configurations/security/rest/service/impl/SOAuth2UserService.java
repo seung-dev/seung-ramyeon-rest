@@ -6,7 +6,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import app.configurations.security.types.SUser;
+import app.boot.configuration.security.type.SUser;
 import lombok.extern.slf4j.Slf4j;
 
 @Service(value = "sOAuth2UserService")
