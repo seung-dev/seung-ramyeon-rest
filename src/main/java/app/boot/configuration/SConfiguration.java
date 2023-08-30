@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 
-import app.boot.type.SEnvironment;
+import app.boot.configuration.type.SEnvironment;
 import lombok.extern.slf4j.Slf4j;
 import seung.util.kimchi.types.SBuildProperties;
 import seung.util.kimchi.types.SLinkedHashMap;

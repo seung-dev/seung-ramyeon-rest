@@ -1,4 +1,4 @@
-package app.boot.configuration.rest.type;
+package app.boot.configuration.security.rest.type;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

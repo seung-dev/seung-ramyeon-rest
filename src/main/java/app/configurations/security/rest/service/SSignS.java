@@ -4,9 +4,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.ResponseEntity;
 
-import app.boot.configuration.rest.type.SSigninUsername;
-import app.boot.configuration.rest.type.SSignupUsername;
-import app.boot.configuration.rest.type.SVerifyUsername;
+import app.boot.configuration.security.rest.type.SSigninUsername;
+import app.boot.configuration.security.rest.type.SSignupUsername;
+import app.boot.configuration.security.rest.type.SVerifyUsername;
 import app.boot.configuration.security.type.SOAuth2AuthenticationException;
 import app.boot.configuration.web.type.SRequestHeader;
 import app.boot.configuration.web.type.SResponseBody;

@@ -1,4 +1,4 @@
-package app.boot.type;
+package app.boot.configuration.type;
 
 import lombok.Getter;
 import lombok.Setter;

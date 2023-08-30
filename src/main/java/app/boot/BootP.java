@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import app.boot.type.SEnvironment;
+import app.boot.configuration.type.SEnvironment;
 import kong.unirest.Unirest;
 import lombok.extern.slf4j.Slf4j;
 import seung.util.kimchi.SSecurity;

@@ -3,6 +3,8 @@ package app.boot.configuration.web.type;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -17,6 +19,15 @@ import seung.util.kimchi.types.SType;
 public class SRequestAttribute extends SType {
 
 	private String trace_id;
+	
+	@NotBlank
+	private String local_addr;
+	
+	@NotBlank
+	private String local_name;
+	
+	@NotNull
+	private Integer local_port;
 	
 	@Builder.Default
 	private long request_time = System.currentTimeMillis();
@@ -41,6 +52,8 @@ public class SRequestAttribute extends SType {
 	
 	private String user_agent;
 	
+	private String referer;
+	
 	private String principal;
 	
 	private String error_code;
@@ -52,9 +65,12 @@ public class SRequestAttribute extends SType {
 		long request_time = System.currentTimeMillis();
 		return defaultBuilder()
 				.trace_id(String.format("%d%s", request_time, RandomStringUtils.random(7, true, true)))
+				.local_addr(request.getLocalAddr())
+				.local_name(request.getLocalName())
+				.local_port(request.getLocalPort())
 				.http_method(request.getMethod())
-				.url_scheme(request.getScheme())
-				.url_domain(SRequest.domain(request))
+				.url_scheme(SRequest.scheme(request))
+				.url_domain(SRequest.host(request))
 				.url_port(request.getServerPort())
 				.url_path(request.getRequestURI())
 				.url_query(request.getQueryString())

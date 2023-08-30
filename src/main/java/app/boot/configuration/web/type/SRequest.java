@@ -17,19 +17,35 @@ public class SRequest {
 	public static final String _REQUEST_ATTRIBUTE_NAME = "request_attribute";
 	
 	public static final String[] _REMOTE_ADDR_HEADER_NAMES = {
-			"X-Forwarded-For"
-			, "Proxy-Client-IP"
-			, "HTTP_X_FORWARDED_FOR"
-			, "HTTP_CLIENT_IP"
-			, "WL-Proxy-Client-IP"
+			"x-forwarded-for"
+			, "proxy-client-ip"
+			, "http_x_forwarded_for"
+			, "http_client_ip"
+			, "wl_proxy_client_ip"
 	};
 	
-	public static String domain(HttpServletRequest request) {
-		String domain = request.getHeader("X-Forwarded-Proto");
-		if(StringUtils.isNotEmpty(domain)) {
-			return domain;
+	public static String scheme(HttpServletRequest request) {
+		String scheme = request.getHeader("x-forwarded-proto");
+		if(StringUtils.isNotEmpty(scheme)) {
+			return scheme;
+		}
+		return request.getScheme();
+	}
+	
+	public static String host(HttpServletRequest request) {
+		String host = request.getHeader("host");
+		if(StringUtils.isNotEmpty(host)) {
+			return host;
 		}
 		return request.getServerName();
+	}
+	
+	public static int port(HttpServletRequest request) {
+		String port = request.getHeader("x-forwarded-port");
+		if(StringUtils.isNotEmpty(port)) {
+			return Integer.parseInt(port);
+		}
+		return request.getServerPort();
 	}
 	
 	public static String remote_addr(HttpServletRequest request) {
