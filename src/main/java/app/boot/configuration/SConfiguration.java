@@ -7,23 +7,27 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
+import org.springframework.core.env.Environment;
 
-import app.boot.configuration.type.SEnvironment;
+import app.boot.configuration.types.SEnvironment;
 import lombok.extern.slf4j.Slf4j;
 import seung.util.kimchi.types.SBuildProperties;
 import seung.util.kimchi.types.SLinkedHashMap;
 
 @PropertySources({
-	@PropertySource(value = "classpath:s-security-${spring.profiles.active}.properties")
-	, @PropertySource(value = "classpath:s-datasource-${spring.profiles.active}.properties")
-	, @PropertySource(value = "classpath:s-application-${spring.profiles.active}.properties")
+	@PropertySource(value = "classpath:s-application-${spring.profiles.active}.properties")
 	, @PropertySource(value = "file:${app.path}/${spring.application.name}.properties", ignoreResourceNotFound=true)
+	, @PropertySource(value = "classpath:s-security-${spring.profiles.active}.properties")
+	, @PropertySource(value = "classpath:s-datasource-${spring.profiles.active}.properties")
 })
 @ComponentScan(value = {"app"})
 @Configuration
 @Slf4j
 public class SConfiguration {
 
+	@Autowired
+	private Environment environment;
+	
 	@Autowired(required = false)
 	private BuildProperties buildProperties;
 	
@@ -44,8 +48,8 @@ public class SConfiguration {
 	
 	@Bean(name = "sEnvironment")
 	public SEnvironment sEnvironment() {
-		return new SEnvironment();
-	}// end of sEnv
+		return new SEnvironment(environment);
+	}// end of sEnvironment
 	
 	@Bean(name = "sCache")
 	public SLinkedHashMap SCache() {

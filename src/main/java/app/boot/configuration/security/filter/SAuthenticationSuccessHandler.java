@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.ForwardAuthenticationSuccessHandler;
 
-import app.boot.configuration.security.type.SUser;
+import app.boot.configuration.security.types.SUser;
 import lombok.extern.slf4j.Slf4j;
 import seung.util.kimchi.types.SLinkedHashMap;
 
@@ -17,9 +17,9 @@ import seung.util.kimchi.types.SLinkedHashMap;
 public class SAuthenticationSuccessHandler extends ForwardAuthenticationSuccessHandler {
 
 	public SAuthenticationSuccessHandler(
-			String forward_uri
+			String forward_url
 			) {
-		super(forward_uri);
+		super(forward_url);
 	}
 	
 	@Override

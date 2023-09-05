@@ -12,7 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import app.boot.configuration.web.type.SResponseAdvice;
+import app.boot.configuration.web.types.SResponseAdvice;
 import lombok.extern.slf4j.Slf4j;
 
 @Component(value = "sAuthenticationEntryPoint")

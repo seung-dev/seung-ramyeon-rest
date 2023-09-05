@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 
 import app.boot.configuration.datasource.SMapper0;
 import app.boot.configuration.web.rest.service.SRestS;
-import app.boot.configuration.web.rest.type.SRestHmac;
-import app.boot.configuration.web.type.SRequestAttribute;
-import app.boot.configuration.web.type.SRequestBody;
-import app.boot.configuration.web.type.SResponseBody;
-import app.boot.configuration.web.type.SResponseEntity;
+import app.boot.configuration.web.rest.types.SRestHmac;
+import app.boot.configuration.web.types.SRequestAttribute;
+import app.boot.configuration.web.types.SRequestBody;
+import app.boot.configuration.web.types.SResponseBody;
+import app.boot.configuration.web.types.SResponseEntity;
 import lombok.extern.slf4j.Slf4j;
 import seung.util.kimchi.SConvert;
 import seung.util.kimchi.SSecurity;
@@ -37,6 +37,8 @@ public class SRestSI implements SRestS {
 			) throws Exception {
 		log.debug("run");
 		
+		String trace_id = request_attribute.getTrace_id();
+		
 		SResponseBody response_body = SResponseBody
 				.builder(request_attribute)
 				.build()
@@ -55,7 +57,7 @@ public class SRestSI implements SRestS {
 			}// end of while
 			
 		} catch (Exception e) {
-			log.error("exception=", e);
+			log.error("({}) exception=", trace_id, e);
 		}// end of try
 		
 		return SResponseEntity.build(request_attribute, response_body);
@@ -68,6 +70,8 @@ public class SRestSI implements SRestS {
 			, SLinkedHashMap request_header
 			) throws Exception {
 		log.debug("run");
+		
+		String trace_id = request_attribute.getTrace_id();
 		
 		SResponseBody response_body = SResponseBody
 				.builder(request_attribute)
@@ -87,18 +91,20 @@ public class SRestSI implements SRestS {
 			}// end of while
 			
 		} catch (Exception e) {
-			log.error("exception=", e);
+			log.error("({}) exception=", trace_id, e);
 		}// end of try
 		
 		return SResponseEntity.build(request_attribute, response_body);
-	}// end of reflect_get
+	}// end of reflect_post
 	
 	@Override
-	public ResponseEntity<SResponseBody> hmac(
+	public ResponseEntity<SResponseBody> reflect_hmac(
 			SRequestAttribute request_attribute
 			, SRestHmac request_body
 			) throws Exception {
 		log.debug("run");
+		
+		String trace_id = request_attribute.getTrace_id();
 		
 		SResponseBody response_body = SResponseBody
 				.builder(request_attribute)
@@ -134,7 +140,7 @@ public class SRestSI implements SRestS {
 			}// end of while
 			
 		} catch (Exception e) {
-			log.error("exception=", e);
+			log.error("({}) exception=", trace_id, e);
 		} finally {
 			response_body.add("timestamp", timestamp);
 			response_body.add("access_key", access_key);
@@ -142,6 +148,33 @@ public class SRestSI implements SRestS {
 		}// end of try
 		
 		return SResponseEntity.build(request_attribute, response_body);
-	}// end of reflect_get
+	}// end of reflect_hmac
+	
+	@Override
+	public int add_rest_hist(
+			SRequestAttribute request_attribute
+			, int http_status
+			) throws Exception {
+		log.debug("run");
+		
+		String trace_id = request_attribute.getTrace_id();
+		
+		int add_rest_hist = 0;
+		
+		SLinkedHashMap query = new SLinkedHashMap();
+		try {
+			
+			query.merge(request_attribute);
+			query.add("roles", String.join(",", request_attribute.getRoles()));
+			query.add("http_status", http_status);
+			
+			add_rest_hist = sMapper0.insert("add_rest_hist", query);
+			
+		} catch (Exception e) {
+			log.error("({}) exception=", trace_id, e);
+		}// end of try
+		
+		return add_rest_hist;
+	}// end of add_rest_hist
 	
 }

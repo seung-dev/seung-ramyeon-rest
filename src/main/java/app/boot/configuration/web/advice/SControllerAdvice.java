@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
 
-import app.boot.configuration.web.type.SResponseAdvice;
+import app.boot.configuration.web.types.SResponseAdvice;
 import lombok.extern.slf4j.Slf4j;
 import seung.util.kimchi.types.SResponseException;
 

@@ -20,7 +20,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.util.WebUtils;
 
-import app.boot.configuration.security.type.SUser;
+import app.boot.configuration.security.types.SUser;
+import app.boot.configuration.web.types.SError;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
@@ -34,12 +35,11 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
 import io.jsonwebtoken.security.WeakKeyException;
 import lombok.extern.slf4j.Slf4j;
-import seung.util.kimchi.types.SError;
 
 @Slf4j
 public class SJwt {
 
-	private final static String _ROLES = "roles";
+	public final static String _ROLES = "roles";
 	
 	public static SecretKey hmac_key(String hex_key) throws WeakKeyException, DecoderException {
 		return Keys.hmacShaKeyFor(Hex.decodeHex(hex_key));
@@ -88,7 +88,7 @@ public class SJwt {
 				, iss
 				, duration
 				, s_user.getName()//subject
-				, Collections.singletonMap(_ROLES, s_user.roles())
+				, Collections.singletonMap(_ROLES, s_user.roles())//claims
 				);
 	}// end of generate_token
 	
@@ -131,6 +131,60 @@ public class SJwt {
 				.secure(secure)
 				.build()
 				.toString();
+	}// end of generate_cookie
+	
+	public static String generate_cookie(
+			String cookie_name
+			, String token_type
+			, String token
+			, long max_age
+			, String cookie_path
+			) throws UnsupportedEncodingException {
+		return generate_cookie(
+				cookie_name
+				, token_type
+				, token
+				, max_age
+				, cookie_path
+				, SameSite.STRICT//same_site
+				, true//http_only
+				, true//secure
+				);
+	}// end of generate_cookie
+	
+	public static String generate_cookie_clear(
+			String cookie_name
+			, String cookie_path
+			, SameSite same_site
+			, boolean http_only
+			, boolean secure
+			) throws UnsupportedEncodingException {
+		return generate_cookie(
+				cookie_name
+				, ""//token_type
+				, ""//token
+				, 0//max_age
+				, cookie_path
+				, same_site
+				, http_only
+				, secure
+				);
+	}// end of generate_cookie
+	
+	public static String generate_cookie_clear(
+			String cookie_name
+			, String cookie_path
+			) throws UnsupportedEncodingException {
+		return generate_cookie(
+				cookie_name
+				, ""//token_type
+				, ""//token
+				, 0//max_age
+				, cookie_path
+				, SameSite.STRICT//same_site
+				, true//http_only
+				, true//secure
+				);
 	}// end of generate_cookie
 	
 	public static Cookie cookie(

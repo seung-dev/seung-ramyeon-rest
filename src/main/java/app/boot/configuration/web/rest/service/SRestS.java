@@ -2,14 +2,13 @@ package app.boot.configuration.web.rest.service;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
-import app.boot.configuration.web.rest.type.SRestHmac;
-import app.boot.configuration.web.type.SRequestAttribute;
-import app.boot.configuration.web.type.SRequestBody;
-import app.boot.configuration.web.type.SResponseBody;
+import app.boot.configuration.web.rest.types.SRestHmac;
+import app.boot.configuration.web.types.SRequestAttribute;
+import app.boot.configuration.web.types.SRequestBody;
+import app.boot.configuration.web.types.SResponseBody;
 import seung.util.kimchi.types.SLinkedHashMap;
 
 public interface SRestS {
@@ -26,9 +25,9 @@ public interface SRestS {
 	 * <pre>
 	 * </pre>
 	 * @param {@link SRequestAttribute}
-	 * @param {@link HttpServletRequest}
+	 * @param {@link Map}
 	 * @param {@link SLinkedHashMap}
-	 * @return {@link SRequestBody}
+	 * @return {@link SResponseBody}
 	 */
 	ResponseEntity<SResponseBody> reflect_get(SRequestAttribute request_attribute, Map<String, Object> request_param, SLinkedHashMap request_header) throws Exception;
 	
@@ -46,7 +45,7 @@ public interface SRestS {
 	 * @param {@link SRequestAttribute}
 	 * @param {@link SRequestBody}
 	 * @param {@link SLinkedHashMap}
-	 * @return {@link SRequestBody}
+	 * @return {@link SResponseBody}
 	 */
 	ResponseEntity<SResponseBody> reflect_post(SRequestAttribute request_attribute, SRequestBody request_body, SLinkedHashMap request_header) throws Exception;
 	
@@ -63,8 +62,24 @@ public interface SRestS {
 	 * </pre>
 	 * @param {@link SRequestAttribute}
 	 * @param {@link SRestHmac}
-	 * @return {@link SRequestBody}
+	 * @return {@link SResponseBody}
 	 */
-	ResponseEntity<SResponseBody> hmac(SRequestAttribute request_attribute, SRestHmac request_body) throws Exception;
+	ResponseEntity<SResponseBody> reflect_hmac(SRequestAttribute request_attribute, SRestHmac request_body) throws Exception;
+	
+	/**
+	 * <h1>Description</h1>
+	 * <pre>
+	 * 요청내역 등록
+	 * </pre>
+	 * <h1>Request</h1>
+	 * <pre>
+	 * </pre>
+	 * <h1>Response</h1>
+	 * <pre>
+	 * </pre>
+	 * @param {@link SRequestAttribute}
+	 * @return {@link Authentication}
+	 */
+	int add_rest_hist(SRequestAttribute request_attribute, int http_status) throws Exception;
 	
 }

@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 
-import app.boot.configuration.security.type.SCommonOAuth2Provider;
+import app.boot.configuration.security.types.SCommonOAuth2Provider;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

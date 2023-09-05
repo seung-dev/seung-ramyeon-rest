@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import app.boot.configuration.web.rest.service.SRestS;
-import app.boot.configuration.web.rest.type.SRestHmac;
-import app.boot.configuration.web.type.SRequest;
-import app.boot.configuration.web.type.SRequestAttribute;
-import app.boot.configuration.web.type.SRequestBody;
-import app.boot.configuration.web.type.SResponseBody;
+import app.boot.configuration.web.rest.types.SRestHmac;
+import app.boot.configuration.web.types.SRequest;
+import app.boot.configuration.web.types.SRequestAttribute;
+import app.boot.configuration.web.types.SRequestBody;
+import app.boot.configuration.web.types.SResponseBody;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -53,13 +53,13 @@ public class SRestC {
 	}//end of reflect_post
 	
 	@RequestMapping(value = {"/rest/reflect/hmac"}, method = {RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SResponseBody> hmac(
+	public ResponseEntity<SResponseBody> reflect_hmac(
 			@RequestAttribute final SRequestAttribute request_attribute
 			, @Valid @RequestBody final SRestHmac request_body
 			) throws Exception {
 		log.debug("run");
 		
-		return sRestS.hmac(request_attribute, request_body);
-	}//end of signature
+		return sRestS.reflect_hmac(request_attribute, request_body);
+	}//end of reflect_hmac
 	
 }

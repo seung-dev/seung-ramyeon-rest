@@ -13,9 +13,9 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import app.boot.configuration.web.rest.service.SFilterS;
-import app.boot.configuration.web.type.SRequest;
-import app.boot.configuration.web.type.SRequestAttribute;
+import app.boot.configuration.web.rest.service.SRestS;
+import app.boot.configuration.web.types.SRequest;
+import app.boot.configuration.web.types.SRequestAttribute;
 import lombok.extern.slf4j.Slf4j;
 
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
@@ -23,8 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SGateRequestFilter extends OncePerRequestFilter {
 
-	@Resource(name = "sFilterS")
-	private SFilterS sFilterS;
+	@Resource(name = "sRestS")
+	private SRestS sRestS;
 	
 	@Override
 	protected void doFilterInternal(
@@ -53,12 +53,10 @@ public class SGateRequestFilter extends OncePerRequestFilter {
 		}// end of try
 		
 		try {
-			if(0 == sFilterS.add_rest_hist(
-					request
+			sRestS.add_rest_hist(
+					request_attribute
 					, response.getStatus()//http_status
-					)) {
-				log.error("({}) Add history failed.", trace_id);
-			}
+					);
 		} catch (Exception e) {
 			log.error("({}) exception=", trace_id, e);
 		}// end of try

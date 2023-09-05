@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.codec.DecoderException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -28,11 +29,13 @@ import app.boot.configuration.security.filter.SAuthenticationFailureHandler;
 import app.boot.configuration.security.filter.SAuthenticationSuccessHandler;
 import app.boot.configuration.security.filter.SDaoAuthenticationProvider;
 import app.boot.configuration.security.filter.SInMemoryClientRegistrationRepository;
+import app.boot.configuration.security.filter.SSecurityFilter;
 import app.boot.configuration.security.jwt.SJwt;
-import app.boot.configuration.web.rest.service.SFilterS;
-import app.configurations.security.filters.SJwtRequestFilter;
-import app.configurations.security.rest.service.impl.SOAuth2UserService;
-import app.configurations.security.rest.service.impl.SUserDetailsService;
+import app.boot.configuration.security.rest.service.SFilterS;
+import app.boot.configuration.security.rest.service.impl.SOAuth2UserService;
+import app.boot.configuration.security.rest.service.impl.SUserDetailsService;
+import app.boot.configuration.security.types.SKey;
+import io.jsonwebtoken.security.WeakKeyException;
 import lombok.extern.slf4j.Slf4j;
 
 @EnableWebSecurity
@@ -45,7 +48,6 @@ public class SConfigurationSecurity {
 	
 	@Resource(name = "sFilterS")
 	private SFilterS sFilterS;
-	
 	
 	@Value(value = "${app.signin.success.url}")
 	private String signin_success_url;
@@ -65,27 +67,6 @@ public class SConfigurationSecurity {
 	@Value(value = "${app.security.jwt.key}")
 	private String jwt_key;
 	
-	@Value(value = "${app.security.jwt.iss}")
-	private String jwt_iss;
-	
-	@Value(value = "${app.security.jwt.token.type}")
-	private String jwt_token_type;
-	
-	@Value(value = "${app.security.jwt.access.cookie.name}")
-	private String jwt_access_cookie_name;
-	
-	@Value(value = "${app.security.jwt.refresh.cookie.name}")
-	private String jwt_refresh_cookie_name;
-	
-	@Value(value = "${app.security.jwt.cookie.path}")
-	private String jwt_cookie_path;
-	
-	@Value(value = "${app.security.jwt.access.cookie.duration}")
-	private long jwt_access_cookie_duration;
-	
-	@Value(value = "${app.security.jwt.refresh.cookie.duration}")
-	private long jwt_refresh_cookie_duration;
-	
 	@Resource(name = "sBCryptPasswordEncoder")
 	private SBCryptPasswordEncoder sBCryptPasswordEncoder;
 	
@@ -94,6 +75,11 @@ public class SConfigurationSecurity {
 	
 	@Resource(name = "sOAuth2UserService")
 	private SOAuth2UserService sOAuth2UserService;
+	
+	@Bean(name = "sKey")
+	public SKey sKey() throws WeakKeyException, DecoderException {
+		return new SKey(SJwt.hmac_key(jwt_key));
+	}// end of sEnvironment
 	
 	@ConfigurationProperties(prefix = "app.security.oauth2")
 	@Bean(name = "oauth2Properties")
@@ -129,6 +115,21 @@ public class SConfigurationSecurity {
 		corsConfiguration.addAllowedHeader("*");
 		corsConfiguration.addAllowedMethod("*");
 		
+//		corsConfiguration.setAllowedOriginPatterns(
+//				Arrays.asList(
+//						"https://www.restful.kr"
+//						, "https://10.0.1.100:10605"
+//						, "http://192.168.*:[*]"
+//						, "http://127.0.0.1:[*]"
+//						, "http://localhost:[*]"
+//						, "file://index.html"
+//						, "null"
+//						, "-"
+//				)
+//		);
+//		corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST"));
+//		corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Accept", "Content-Type", "X-Requested-With"));
+		
 		urlBasedCorsConfigurationSource.registerCorsConfiguration("/rest/**", corsConfiguration);
 		
 		return new CorsFilter(urlBasedCorsConfigurationSource);
@@ -150,18 +151,7 @@ public class SConfigurationSecurity {
 			.formLogin().disable()
 			// filter
 			.addFilterBefore(
-//					new SJwtRequestFilter(ant_patterns_authorized, sJwt, sUserDetailsService)
-					new SJwtRequestFilter(
-							SJwt.hmac_key(jwt_key)//jwt_key
-							, jwt_iss
-							, jwt_token_type
-							, jwt_access_cookie_name
-							, jwt_refresh_cookie_name
-							, jwt_cookie_path
-							, jwt_access_cookie_duration
-							, jwt_refresh_cookie_duration
-							, sUserDetailsService
-							)
+					new SSecurityFilter(sFilterS)
 					, UsernamePasswordAuthenticationFilter.class
 					)
 			// session
@@ -185,9 +175,6 @@ public class SConfigurationSecurity {
 //				.logout()
 //				.logoutUrl("/rest/sign/out")
 //				.logoutSuccessHandler(new SLogoutSuccessHandler())
-//			// filter and username
-//			.and()
-//				.apply(new SSecurityConfigurerAdapter(new SJwtRequestFilter(ant_patterns_authorized, sJwt, sUserDetailsService)))
 			// oauth2
 			.and()
 				.oauth2Login()

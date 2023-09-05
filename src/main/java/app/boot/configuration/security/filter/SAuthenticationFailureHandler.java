@@ -11,16 +11,16 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.ForwardAuthenticationFailureHandler;
 
-import app.boot.configuration.web.type.SResponseAdvice;
+import app.boot.configuration.web.types.SResponseAdvice;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SAuthenticationFailureHandler extends ForwardAuthenticationFailureHandler {
 
 	public SAuthenticationFailureHandler(
-			String forward_uri
+			String forward_url
 			) {
-		super(forward_uri);
+		super(forward_url);
 	}
 	
 	@Override
