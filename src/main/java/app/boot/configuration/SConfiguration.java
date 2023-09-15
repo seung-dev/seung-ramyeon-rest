@@ -15,10 +15,10 @@ import seung.util.kimchi.types.SBuildProperties;
 import seung.util.kimchi.types.SLinkedHashMap;
 
 @PropertySources({
-	@PropertySource(value = "classpath:s-application-${spring.profiles.active}.properties")
+	@PropertySource(value = "classpath:profile-${spring.profiles.active}/s-application-${spring.profiles.active}.properties")
 	, @PropertySource(value = "file:${app.path}/${spring.application.name}.properties", ignoreResourceNotFound=true)
-	, @PropertySource(value = "classpath:s-security-${spring.profiles.active}.properties")
-	, @PropertySource(value = "classpath:s-datasource-${spring.profiles.active}.properties")
+	, @PropertySource(value = "classpath:profile-${spring.profiles.active}/s-security-${spring.profiles.active}.properties")
+	, @PropertySource(value = "classpath:profile-${spring.profiles.active}/s-datasource-${spring.profiles.active}.properties")
 })
 @ComponentScan(value = {"app"})
 @Configuration

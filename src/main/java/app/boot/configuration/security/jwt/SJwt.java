@@ -39,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SJwt {
 
-	public final static String _ROLES = "roles";
+	public final static String _ROLES = "s-roles";
 	
 	public static SecretKey hmac_key(String hex_key) throws WeakKeyException, DecoderException {
 		return Keys.hmacShaKeyFor(Hex.decodeHex(hex_key));

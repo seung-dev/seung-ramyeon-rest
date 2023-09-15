@@ -8,7 +8,6 @@
  */
 
 rootProject.name = 'seung-ramyeon-rest'
-/*
-*/
+
 include "seung-util-kimchi"
 project(":seung-util-kimchi").projectDir = new File("d:/seung-git/seung-util-kimchi")
